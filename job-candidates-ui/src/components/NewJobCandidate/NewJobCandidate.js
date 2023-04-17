@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import Swal from "sweetalert2";
 import Navbar from '../Navbar/Navbar';
 import SkillsService from '../../service/SkillsService';
+import JobCandidatesService from '../../service/JobCandidatesService';
 
 
 const NewJobCandidate = () => {
+  let navigate = useNavigate()
+
   const [loading, setLoading] = useState(true)
 
   const [allSkills, setAllSkills] = useState([])
@@ -43,17 +48,60 @@ const NewJobCandidate = () => {
   }, [])
 
   const onSubmit = (e) => {
-
+    e.preventDefault()
+    var data = {
+      fullName: fullName,
+      email: email,
+      phoneNumber: telephone,
+      dateOfBirth: dateOfBirth,
+      skills: []
+    }
+    if (skills) {
+      (skills).map((skill) => {
+        data.skills = data.skills.concat(skill.id)
+      })
+    }
+    console.log(data)
+    JobCandidatesService.postJobCandidate(data)
+      .then(res => {
+        Swal.fire({
+          icon: 'success',
+          title: 'success',
+          text: res.data
+        })
+          .finally(() => {
+            navigate("/")
+          })
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data,
+        })
+      })
   }
 
   const addSkillToTable = (e) => {
     e.preventDefault()
     console.log(selectedSkillId)
+    for (var i = 0; i < skills.length; i++) {
+      if (skills[i].id === selectedSkillId) return;
+    }
+    for (var i = 0; i < allSkills.length; i++) {
+      if (allSkills[i].id === selectedSkillId) {
+        setSkills(skills.concat(allSkills[i]))
+        return;
+      }
+    }
 
   }
 
   const removeSkill = (e, skill) => {
-
+    e.preventDefault()
+    setSkills(skills.filter(function (removedSkill) {
+      return skill.id !== removedSkill.id
+    }))
   }
 
   return (
