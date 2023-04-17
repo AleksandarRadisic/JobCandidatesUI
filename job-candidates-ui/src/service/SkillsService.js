@@ -10,6 +10,10 @@ const SkillsService = {
 
     deleteSkill: async (id) => {
         return await axios.delete(axios.defaults.baseURL + "Skills" + "/" + id)
+    },
+
+    addSkills: async (skill) => {
+        return await axios.post(axios.defaults.baseURL + "Skills", {name:skill})
     }
 
 }

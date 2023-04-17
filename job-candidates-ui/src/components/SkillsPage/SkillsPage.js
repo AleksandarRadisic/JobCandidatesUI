@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Navbar from '../Navbar/Navbar';
 import SkillList from '../SkillList/SkillList';
 import SkillsService from '../../service/SkillsService';
+import SkillAdd from '../SkillAdd/SkillAdd';
 
 
 const SkillsPage = () => {
@@ -30,7 +31,7 @@ const SkillsPage = () => {
       </div>
       <h1>Add new skill</h1>
       <div>
-
+        <SkillAdd skills={skills}/>
       </div>
       <h1>Existing skills</h1>
       <div>
