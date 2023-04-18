@@ -18,7 +18,7 @@ const NewJobCandidate = () => {
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [telephone, setTelephone] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState();
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [skills, setSkills] = useState([])
 
   const [fullNameValid, setFullNameValid] = useState(false)
@@ -29,14 +29,13 @@ const NewJobCandidate = () => {
 
   const [isPending, setIsPending] = useState(false);
 
-  const validate = () => {
-    setFullNameValid(fullName !== "")
-    setEmailValid(/\S+@\S+\.\S+/.test(email))
-    setPhoneNumberValid(/((\+[0-9]{1,3})|0)[0-9]{7,10}/.test(telephone))
-    setBirthValid(dateOfBirth !== null && dateOfBirth !== undefined)
+  
 
-    setButtonDisabled(!(fullNameValid && emailValid && phoneNumberValid && birthValid))
-  }
+  useEffect(() => {
+    if (!loading) {
+      validate()
+    }
+  })
 
   useEffect(() => {
     SkillsService.getAllSkills().then(res => {
@@ -46,6 +45,17 @@ const NewJobCandidate = () => {
       setLoading(false)
     })
   }, [])
+
+  const validate = () => {
+    setFullNameValid(Boolean(fullName))
+    setEmailValid(/\S+@\S+\.\S+/.test(email))
+    setPhoneNumberValid(/((\+[0-9]{1,3})|0)[0-9]{7,10}/.test(telephone))
+    setBirthValid(Boolean(dateOfBirth))
+
+    setButtonDisabled(!(fullNameValid && emailValid && phoneNumberValid && birthValid))
+    console.log(fullName, email, telephone, dateOfBirth)
+    console.log(fullNameValid, emailValid, phoneNumberValid, birthValid, buttonDisabled)
+  }
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -113,23 +123,23 @@ const NewJobCandidate = () => {
         <form style={{ maxWidth: "50%", alignContent: "center", alignItems: "center", margin: "auto" }}>
           <div className="mb-3">
             <label className="form-label">Full name</label>
-            <input value={fullName} onChange={(e) => { setFullName(e.target.value); validate() }} type="text" className="form-control" id="InputFirstName" />
-            <label hidden={fullNameValid} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter full name</label>
+            <input value={fullName} onChange={(e) => setFullName(e.target.value)} type="text" className="form-control" id="InputFirstName" placeholder='Name is required'/>
+            <label hidden={fullNameValid || !fullName} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter full name</label>
           </div>
           <div className="mb-3">
             <label className="form-label">Date of birth</label>
-            <input value={dateOfBirth} onChange={(e) => { setDateOfBirth(e.target.value); validate() }} type="date" className="form-control" id="InputEmail" />
-            <label hidden={birthValid} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter valid date of birth</label>
+            <input value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} type="date" className="form-control" id="InputEmail"/>
+            <label hidden={birthValid || !dateOfBirth} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter valid date of birth</label>
           </div>
           <div className="mb-3">
             <label className="form-label">Email address</label>
-            <input value={email} onChange={(e) => { setEmail(e.target.value); validate() }} type="email" className="form-control" id="InputEmail" />
-            <label hidden={emailValid} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter valid email address</label>
+            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="form-control" id="InputEmail" placeholder='Email is required'/>
+            <label hidden={emailValid || !email} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter valid email address</label>
           </div>
           <div className="mb-3">
             <label className="form-label">Phone number</label>
-            <input value={telephone} onChange={(e) => { setTelephone(e.target.value); validate() }} type="tel" className="form-control" id="InputEmail" />
-            <label hidden={phoneNumberValid} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter valid phone number</label>
+            <input onChange={(e) => setTelephone(e.target.value)} type="tel" className="form-control" id="InputEmail" placeholder='Phone number is required' />
+            <label hidden={phoneNumberValid || !telephone} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter valid phone number</label>
           </div>
           <div>
             <label className="form-label">Skills</label>
@@ -143,7 +153,7 @@ const NewJobCandidate = () => {
               </select>
             }
             <button className="btn btn-primary" onClick={(e) => addSkillToTable(e)} style={{ marginTop: "10px" }}>Add skill</button>
-            <table>
+            <table className='table table-bordered table-striped' style={{marginTop: "10px"}}>
               <tbody>
                 {skills &&
                   (skills).map((skill, index) => {
