@@ -149,7 +149,7 @@ const SkillList = (props) => {
       }
       <table className='table table-bordered table-striped' style={{ width: "50%", margin: "auto" }}>
         <tbody>
-          {props.skills.length !== 0 &&
+          {skills.length !== 0 &&
             (skills).map((skill, index) => {
               return (
                 <tr key={index}>
