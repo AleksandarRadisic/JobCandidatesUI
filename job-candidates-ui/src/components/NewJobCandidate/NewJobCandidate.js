@@ -41,7 +41,6 @@ const NewJobCandidate = () => {
     SkillsService.getAllSkills().then(res => {
       setAllSkills(res.data)
       setSelectedSkillId(res.data[0].id)
-      console.log(selectedSkillId)
       setLoading(false)
     })
   }, [])
@@ -53,8 +52,6 @@ const NewJobCandidate = () => {
     setBirthValid(Boolean(dateOfBirth))
 
     setButtonDisabled(!(fullNameValid && emailValid && phoneNumberValid && birthValid))
-    console.log(fullName, email, telephone, dateOfBirth)
-    console.log(fullNameValid, emailValid, phoneNumberValid, birthValid, buttonDisabled)
   }
 
   const onSubmit = (e) => {
@@ -71,7 +68,6 @@ const NewJobCandidate = () => {
         data.skills = data.skills.concat(skill.id)
       })
     }
-    console.log(data)
     JobCandidatesService.postJobCandidate(data)
       .then(res => {
         Swal.fire({
@@ -94,7 +90,6 @@ const NewJobCandidate = () => {
 
   const addSkillToTable = (e) => {
     e.preventDefault()
-    console.log(selectedSkillId)
     for (var i = 0; i < skills.length; i++) {
       if (skills[i].id === selectedSkillId) return;
     }
@@ -123,12 +118,12 @@ const NewJobCandidate = () => {
         <form style={{ maxWidth: "50%", alignContent: "center", alignItems: "center", margin: "auto" }}>
           <div className="mb-3">
             <label className="form-label">Full name</label>
-            <input value={fullName} onChange={(e) => setFullName(e.target.value)} type="text" className="form-control" id="InputFirstName" placeholder='Name is required'/>
+            <input value={fullName} onChange={(e) => setFullName(e.target.value)} type="text" className="form-control" id="InputFullName" placeholder='Name is required'/>
             <label hidden={fullNameValid || !fullName} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter full name</label>
           </div>
           <div className="mb-3">
             <label className="form-label">Date of birth</label>
-            <input value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} type="date" className="form-control" id="InputEmail"/>
+            <input value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} type="date" className="form-control" id="InputBirth"/>
             <label hidden={birthValid || !dateOfBirth} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter valid date of birth</label>
           </div>
           <div className="mb-3">
@@ -138,7 +133,7 @@ const NewJobCandidate = () => {
           </div>
           <div className="mb-3">
             <label className="form-label">Phone number</label>
-            <input onChange={(e) => setTelephone(e.target.value)} type="tel" className="form-control" id="InputEmail" placeholder='Phone number is required' />
+            <input onChange={(e) => setTelephone(e.target.value)} type="tel" className="form-control" id="InputPhone" placeholder='Phone number is required' />
             <label hidden={phoneNumberValid || !telephone} className='form-control is-invalid' style={{ color: "red", width: "30%", margin: "auto", marginTop: "15px" }}>Enter valid phone number</label>
           </div>
           <div>
