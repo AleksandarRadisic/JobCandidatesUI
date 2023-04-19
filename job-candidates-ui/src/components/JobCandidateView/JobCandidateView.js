@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
+import { confirmAlert } from 'react-confirm-alert';
 import { format } from "date-fns";
 import SkillList from '../SkillList/SkillList';
 import JobCandidatesService from '../../service/JobCandidatesService';
@@ -19,6 +20,35 @@ const JobCandidateView = (props) => {
     setSelectedSkillId(props.allSkills[0].id)
   }, [])
 
+  const deleteJobCandidate = (e) => {
+    e.preventDefault()
+    confirmAlert({
+      title: "Are you sure?",
+      message: "Are you sure you want to delete this job candidate?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            JobCandidatesService.deleteJobCandidate(candidate.id)
+              .then((res) => {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'success',
+                  text: res.data
+                }).finally(() => {
+                  window.location.reload()
+                })
+              })
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    })
+  }
+
   return (
     <>
       {candidate &&
@@ -29,9 +59,11 @@ const JobCandidateView = (props) => {
             <h3>Email: {candidate.email}</h3>
             <h3>Phone number: {candidate.phoneNumber}</h3>
             <h3>Add new skill</h3>
-              <SkillList skills={candidate.skills} candidateSkills={true} candidateId={candidate.id} allSkills={allSkills}/>
+            <SkillList skills={candidate.skills} candidateSkills={true} candidateId={candidate.id} allSkills={allSkills} />
+            <div style={{marginTop: "10px", marginBottom: "10px"}}>
+              <button onClick={(e) => deleteJobCandidate(e, candidate.id)} className="btn btn-danger"><strong>Remove candidate</strong></button>
+            </div>
           </div>
-
         </div>
       }
 

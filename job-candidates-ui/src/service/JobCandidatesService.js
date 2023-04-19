@@ -8,13 +8,22 @@ const JobCandidatesService = {
     },
 
     searchJobCandidates: async (data) => {
+        console.log(data)
         let url = axios.defaults.baseURL + "JobCandidates"
         if (data.fullName !== "") {
             url += "?fullName=" + data.fullName
         }
+        else{
+            if(data.skills.length !== 0){
+                url += "?skillIds=" + data.skills[0].id
+                data.skills.splice(0, 1)
+            }
+        }
+        console.log(url)
         data.skills?.map((skill) => {
             url += "&skillIds=" + skill.id
         })
+        console.log(url)
         return await axios.get(url)
     },
 
@@ -31,6 +40,11 @@ const JobCandidatesService = {
         url += candidateId
         url += "/skill"
         return await axios.post(url, {id: skillId});
+    },
+
+    deleteJobCandidate: async (id) => {
+        let url = axios.defaults.baseURL + "JobCandidates/"
+        return await axios.delete(url + id);
     }
 
 }
