@@ -76,7 +76,7 @@ const JobCandidatesPage = () => {
       <form style={{ maxWidth: "50%", alignContent: "center", alignItems: "center", margin: "auto" }}>
         <div className="mb-3">
           <label className="form-label">Full name</label>
-          <input value={fullName} onChange={(e) => setFullName(e.target.value)} type="text" className="form-control" id="InputFirstName" />
+          <input value={fullName} onChange={(e) => setFullName(e.target.value)} type="text" className="form-control" id="InputFullName" />
         </div>
         <div className="mb-3">
           <label className="form-label">Select skills</label>
